@@ -1,14 +1,20 @@
 # Project 1 - 2D Survival Shooter
-Project 1 is a small Unity 2D survival shooter built as a portfolio project. The player moves around a confined arena, automatically fires at nearby enemies, survives increasingly aggressive enemy waves, collects upgrades, and submits the final run score to an online leaderboard.
+Project 1 is a small Unity 2D survival shooter built as a portfolio project. The player moves around a confined arena, automatically fires at nearby enemies, survives increasingly aggressive enemy waves, collects upgrades, and includes a custom leaderboard integration.
 
 This repository represents the game as it exists from an earlier stage of my learning process. Some systems are simple, direct, and prototype-like by design. The project is presented with those decisions visible, because they show the level of experience and implementation choices I had at the time.
+
+## Media
+![Project 1 gameplay loop](docs/media/project-1-gameplay-loop.gif)
+
+- [Gameplay screenshot](docs/media/project-1-gameplay.png)
+- [Demo video with original game audio](docs/media/project-1-demo.mp4)
 
 ## Project Structure
 The active Unity project lives in this repository. Related deployment pieces exist beside it in different repos:
 
 - `project_1` - Unity source project and main Git repository.
-- `survival-backend` - Node.js / Express / MongoDB backend used by the leaderboard.
-- `survival-frontend` - exported Unity WebGL build that loads the game in the browser.
+- `project_1_Backend` - Node.js / Express / MongoDB backend used by the leaderboard.
+- `project_1_Web_Build` - exported Unity WebGL build that loads the game in the browser.
 
 ## Engine and Packages
 The project uses Unity 6 with the 2D Universal Render Pipeline setup.
@@ -109,7 +115,7 @@ Current drop types:
 ### Backend API Integration
 `BackendAPI.cs` is the Unity-side API layer.
 
-It uses `UnityWebRequest` to communicate with a deployed backend hosted on Render.
+It uses `UnityWebRequest` to communicate with a custom backend that was originally deployed on Render. The Render instance is not currently maintained as part of the live demo, but the integration remains in the project to show the implementation approach.
 
 Implemented calls:
 - `SendRunData` - sends a completed run to the backend.
@@ -126,7 +132,7 @@ The data model sent to the backend includes:
 The leaderboard JSON response is parsed with a small `JsonHelper` wrapper because Unity's built-in `JsonUtility` does not parse a top-level JSON array directly.
 
 ### Backend Service
-The related `survival-backend` project is a small Node.js backend.
+The related `project_1_Backend` repository is a small Node.js backend. It is kept as part of the portfolio to show the original custom leaderboard implementation, before later projects moved toward Unity Gaming Services.
 
 It uses:
 - Express
@@ -147,7 +153,7 @@ Leaderboard sorting is based on:
 2. Earlier creation time as a tie-breaker.
 
 ### WebGL Frontend Build
-The related `survival-frontend` folder contains an exported Unity WebGL build.
+The related `project_1_Web_Build` repository contains an exported Unity WebGL build.
 
 ### Audio
 Audio is handled through `SoundManager.cs`.
@@ -188,12 +194,13 @@ The game uses Unity 2D tilemap assets for the play area. The project also includ
 ## Current Limitations and Rough Edges
 This project intentionally remains close to the version built during an earlier learning stage. Some known rough edges are:
 - The backend URL is hardcoded in the Unity script.
+- The original Render backend instance is not currently live.
 - The run is saved on game over before the player enters a display name, then the name is updated afterward.
 - If name update happens before the backend insert finishes, the backend can fail to find the run.
 - Some systems use direct scene searches such as `FindGameObjectsWithTag`, which is simple but not ideal for scaling.
 - The backend has minimal validation and error handling.
 - The WebGL frontend is the default Unity export page, not a custom designed web page.
-- Some naming is inconsistent because the project evolved from earlier `project_no_sql` versions.
+- Some older internal names may still reflect earlier `project_no_sql` versions.
 - The README and project structure were originally minimal, so this document was added later as portfolio documentation.
 
 ## What This Project Demonstrates
@@ -212,6 +219,6 @@ This project demonstrates:
 - Camera feedback
 - Unity WebGL export
 - REST API communication from Unity
-- Online leaderboard persistence with Express and MongoDB
+- Custom leaderboard persistence with Express and MongoDB
 
 The result is a complete small game loop with local gameplay systems and an external backend connection.
